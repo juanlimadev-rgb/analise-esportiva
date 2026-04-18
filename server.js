@@ -1004,14 +1004,17 @@ app.get('/relatorio/:id_partida/:tipo/pdf', verificarToken, async (req, res) => 
     tipo
     });
 
-    const browser = await puppeteer.launch({
-      headless: "new",
+    browser = await puppeteer.launch({
+      headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
+        '--disable-gpu',
+        '--no-zygote',
+        '--single-process'
+      ],
+      dumpio: true
     });
 
     const page = await browser.newPage();
@@ -1033,14 +1036,17 @@ app.get('/relatorio/:id_partida/:tipo/pdf', verificarToken, async (req, res) => 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename="${nomeArquivo}"`);
     return res.send(pdfBuffer);
-  } catch (error) {
-    console.error('Erro ao gerar PDF com Puppeteer:', error);
-    return res.status(500).json({ erro: 'Erro ao gerar PDF.' });
-  } finally {
-    if (browser) {
-      await browser.close();
+    } catch (error) {
+      console.error('❌ Erro ao gerar PDF:', error);
+      return res.status(500).json({
+        erro: 'Erro ao gerar PDF.',
+        detalhe: error.message
+      });
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
     }
-  }
 });
 
 // -------------------------

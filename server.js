@@ -1006,7 +1006,8 @@ app.get('/relatorio/:id_partida/:tipo/pdf', verificarToken, async (req, res) => 
 
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      dumpio: true
     });
 
     const page = await browser.newPage();

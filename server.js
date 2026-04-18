@@ -1008,27 +1008,25 @@ let browser;
 
 try {
   browser = await puppeteer.launch({
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
     headless: true,
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
-      '--disable-gpu',
-      '--disable-extensions',
-      '--disable-background-networking',
-      '--disable-software-rasterizer',
-      '--no-zygote',
-      '--single-process'
+      '--disable-gpu'
     ]
   });
 
   const page = await browser.newPage();
 
-  // seu código do PDF
-
+  // resto do código do PDF
 } catch (error) {
   console.error('❌ Erro ao gerar PDF:', error);
-  return res.status(500).json({ erro: error.message });
+  return res.status(500).json({
+    erro: 'Erro ao gerar PDF.',
+    detalhe: error.message
+  });
 } finally {
   if (browser) {
     await browser.close();

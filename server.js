@@ -25,6 +25,38 @@ app.get('/', (req, res) => {
   res.send('API Moura Analytics online.');
 });
 
+app.get('/teste-pdf', async (req, res) => {
+  let browser;
+
+  try {
+    browser = await puppeteer.launch({
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ]
+    });
+
+    const page = await browser.newPage();
+    await page.setContent('<h1>Teste PDF</h1>');
+    const pdf = await page.pdf({ format: 'A4' });
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(pdf);
+  } catch (error) {
+    console.error('ERRO TESTE PDF:', error);
+    res.status(500).json({
+      erro: 'Falha no teste do PDF',
+      detalhe: error.message
+    });
+  } finally {
+    if (browser) await browser.close();
+  }
+});
+
 // -------------------------
 // HELPERS
 // -------------------------

@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
 
 const connection = require('./database/connection');
 const verificarToken = require('./middlewares/auth');
@@ -1004,17 +1004,15 @@ app.get('/relatorio/:id_partida/:tipo/pdf', verificarToken, async (req, res) => 
     tipo
     });
 
-    browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
+      executablePath: '/usr/bin/chromium',
       headless: true,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
         '--disable-dev-shm-usage',
-        '--disable-gpu',
-        '--no-zygote',
-        '--single-process'
-      ],
-      dumpio: true
+        '--disable-gpu'
+      ]
     });
 
     const page = await browser.newPage();

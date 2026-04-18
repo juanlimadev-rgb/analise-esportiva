@@ -1018,10 +1018,16 @@ try {
     dumpio: true
   });
 
-  // seu código do PDF aqui
+  const page = await browser.newPage();
+
+  // resto do código do PDF...
 
 } catch (error) {
   console.error('❌ Erro ao gerar PDF:', error);
+  return res.status(500).json({
+    erro: 'Erro ao gerar PDF.',
+    detalhe: error.message
+  });
 } finally {
   if (browser) {
     await browser.close();

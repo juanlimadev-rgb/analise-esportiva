@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const puppeteer = require('puppeteer-core');
+const puppeteer = require('puppeteer');
 
 const connection = require('./database/connection');
 const verificarToken = require('./middlewares/auth');
@@ -1004,16 +1004,29 @@ app.get('/relatorio/:id_partida/:tipo/pdf', verificarToken, async (req, res) => 
     tipo
     });
 
-    const browser = await puppeteer.launch({
-      executablePath: '/usr/bin/chromium',
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-      ]
-    });
+let browser;
+
+try {
+  browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu'
+    ],
+    dumpio: true
+  });
+
+  // seu código do PDF aqui
+
+} catch (error) {
+  console.error('❌ Erro ao gerar PDF:', error);
+} finally {
+  if (browser) {
+    await browser.close();
+  }
+}
 
     const page = await browser.newPage();
     await page.setContent(html, { waitUntil: 'networkidle0' });

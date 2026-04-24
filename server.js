@@ -213,7 +213,7 @@ function gerarSqlEstatistica(fundamento, filtroAtleta = '') {
 
   if (fundamento === 'saque') {
     campoPonto = "resultado = 'ace'";
-    campoAcerto = "resultado IN ('ace', 'neutro')";
+    campoAcerto = "resultado = 'ace'";
     campoErro = "resultado = 'erro'";
     calcularAproveitamento = false;
     calcularEficiencia = false;
@@ -270,7 +270,7 @@ function gerarSqlEstatistica(fundamento, filtroAtleta = '') {
 function getResultadosPorFundamento() {
   return {
     ataque: ['ponto', 'neutro', 'bloqueado', 'erro'],
-    saque: ['ace', 'neutro', 'erro'],
+    saque: ['ace', 'bom', 'neutro', 'erro'],
     passe: ['excelente', 'bom', 'regular', 'ruim', 'erro'],
     bloqueio: ['ponto', 'neutro', 'erro'],
     defesa: ['excelente', 'acao', 'erro'],
